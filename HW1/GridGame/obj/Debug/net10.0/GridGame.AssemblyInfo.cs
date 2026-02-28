@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GridGame")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0447e3f60cac000045a89ce103e51e372839a51a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0e2c206c853c5e8abed3bbb48641b9beb69a636a")]
 [assembly: System.Reflection.AssemblyProductAttribute("GridGame")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GridGame")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

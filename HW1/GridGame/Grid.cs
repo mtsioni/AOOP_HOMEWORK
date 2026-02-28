@@ -28,7 +28,7 @@ public class Grid
     }
     public uint RowColumnToIndex(uint row, uint column) // parses row and column to index
     {
-        return column + row*(Rows+1);
+        return column + row*(Columns+1);
     }
     public uint GetCell(uint index) // returns value of a cell at a given index
     {
@@ -51,5 +51,96 @@ public class Grid
         Grid = grid;
         Rows = rows;
         Columns = columns;
+    }
+    public bool CheckAdjacentCells(uint value, uint? index) // returns true if any adjacent cell is of the desired value
+    {
+        bool ans = false; // return variable
+        int? targetIndex = (int?)index; // target index, check around it
+        int indexModifier; // adjusts index to look at adjacent cells
+        for (int i = 0; i < 9; i++)
+        {
+            if (targetIndex == null) // check if index is null
+                break;
+            if (i == 4) // skip checking index itself
+                continue;
+            if (i < 3) // searching above - substract number of Columns
+            {
+                indexModifier = (Columns+1)*-1;
+            }
+            else if(i < 6) // searching left and right, do nothing
+            {
+                indexModifier = 0; 
+            }
+            else // seatching below, add number of columns
+            {
+                indexModifier = Columns+1;
+            }
+            /*   0   1   2
+            * 0 [0] [1] [2]
+            * 1 [3] [T] [5]
+            * 2 [6] [7] [8]
+            */
+            try // try - to avoid index out of bounds exception
+            {
+                if (Grid[targetIndex + indexModifier + (i-1)] == value) // Check if cell adjacent to target holds the desired value
+                {
+                    ans = true; //set ans to true and stop checking
+                    break;
+                }
+                else continue;
+            }
+            catch (Exception e) // skip whatever is wrong
+            {
+                continue;
+            }
+        }
+        return ans;
+    }
+    public bool CheckAdjacentCells(uint value, uint? row, uint? column) // returns true if any adjacent cell is of the desired value
+    {
+        bool ans = false; // return variable
+        int? targetRow = (int?)row, targetColumn = (int?)column; // target row and column meaning around what cell we seatch
+        int rowModifier, columnModifier; // these will be added to a target row and column to check contents of adjacent cells
+        for(int i = 0; i < 9; i++)
+        {
+            if ((targetRow == null) || (targetColumn == null)) // if row or column provided is null stop search return false
+                break;
+            if (i == 4) // skip the target cell itself
+                continue;
+            if (i < 3) // i from 0 to 2, check the cells above so rowMod -1
+            {
+                rowModifier = -1;
+                columnModifier = i-1;
+            }
+            else if (i < 6) // i 3 and 5, check cells on the same row, so rowMod = 0
+            {
+                rowModifier = 0;
+                columnModifier = i-4;
+            }
+            else // i 6 to 8, check the row below, so rowMod +1
+            {
+                rowModifier = 1;
+                columnModifier = i-7;
+            }
+            /*   0   1   2
+            * 0 [0] [1] [2]
+            * 1 [3] [T] [5]
+            * 2 [6] [7] [8]
+            */
+            try // try - to avoid index out of bounds exception
+            {
+                if (Grid[RowColumnToIndex((uint)(targetRow+rowModifier),(uint)(targetColumn+columnModifier))] == value) // Check if cell adjacent to target holds the desired value
+                {
+                    ans = true; //set ans to true and stop checking
+                    break;
+                }
+                else continue;
+            }
+            catch (Exception e) // skip whatever is wrong
+            {
+                continue;
+            }
+        }
+        return ans;
     }
 }

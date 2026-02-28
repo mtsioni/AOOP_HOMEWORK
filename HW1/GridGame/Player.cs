@@ -6,6 +6,7 @@ public class Player
     public bool CanPlay {get; set;} // true - had a move, false - out of moves
     public uint? SelectedRow {get; set;} // row of a cell player wants to fill
     public uint? SelectedColumn {get; set;} // column of a cell player wants to fill
+    public uint? MovesLeft {get; set;}
     public Player(uint id, string color) // constructor
     {
         PlayerID = id;
@@ -13,5 +14,6 @@ public class Player
         CanPlay = true;
         SelectedRow = null;
         SelectedColumn = null;
+        MovesLeft = null;
     }
 }
