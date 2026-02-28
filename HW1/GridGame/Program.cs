@@ -1,2 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿namespace logiclayer;
+public class Program
+{
+    private static void Main()
+    {
+        
+    }
+}
