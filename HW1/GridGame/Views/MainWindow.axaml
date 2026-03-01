@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="using:GridGame.Views"
         x:Class="GridGame.Views.MainWindow"
         Title="Grid Game"
         Width="900"
@@ -7,10 +8,7 @@
         MinWidth="700"
         MinHeight="500">
 
-    <!-- Temporary placeholder so the app has something visible -->
-    <TextBlock Text="Grid Game - Coming Soon"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               FontSize="24" />
+    <!-- ContentControl shows different views based on what the ViewModel tells it -->
+    <ContentControl Content="{Binding CurrentView}" />
 
 </Window>

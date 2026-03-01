@@ -2,8 +2,22 @@
 
 namespace GridGame.ViewModels;
 
-
 public class MainWindowViewModel : ViewModelBase
 {
-    // this will contains all the game state the UI needs to display
+     private object _currentView  = null!;
+    public object CurrentView
+    {
+        get => _currentView;
+        set
+        {
+            _currentView = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public MainWindowViewModel()
+    {
+        // Start the app on the setup screen
+        CurrentView = new SetupViewModel();
+    }
 }
