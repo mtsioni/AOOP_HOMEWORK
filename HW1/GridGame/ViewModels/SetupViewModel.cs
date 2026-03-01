@@ -38,24 +38,22 @@ public class SetupViewModel : ViewModelBase // Main setup view model
 {
     public ObservableCollection<string> AvailableColors { get; } = new()
     {
-        "#FF0000", 
-        "#00FF00", 
-        "#0000FF", 
-        "#FF00FF", 
-        "#FFFF00", 
-        "#00FFFF", 
-        "#FFA500", 
-        "#FFFFFF"  
+        "#FF0000",
+        "#00FF00",
+        "#0000FF",
+        "#FF00FF",
+        "#FFFF00",
+        "#00FFFF",
+        "#FFA500",
+        "#FFFFFF"
     };
-
-  
     public List<string> AvailableSizes { get; } = new()   // Available board sizes
     {
         "6x6", "8x8", "10x10"
     };
 
-    // Number of players (2-5)
-    private uint _playerCount = 2;
+    public List<uint> AvailablePlayerCounts { get; } = new() { 2, 3, 4, 5 };
+    private uint _playerCount = 2;  // Number of players = 2-5, default to 2
     public uint PlayerCount
     {
         get => _playerCount;
@@ -82,7 +80,7 @@ public class SetupViewModel : ViewModelBase // Main setup view model
     }
 
     // Whether we can proceed w/ the game (all players must have names)
-    public bool CanStart => Players.All(p => !string.IsNullOrWhiteSpace(p.Name)); 
+    public bool CanStart => Players.All(p => !string.IsNullOrWhiteSpace(p.Name));
 
     public SetupViewModel()
     {
