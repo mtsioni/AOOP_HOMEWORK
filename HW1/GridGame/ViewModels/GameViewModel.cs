@@ -1,0 +1,1 @@
+// It will basically be the game board, current turn, player list, scores, etc.
