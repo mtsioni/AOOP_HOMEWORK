@@ -9,11 +9,11 @@ public class GameCoordinator
     public uint? LastMoveHolder {get; set;} // Index for the Players array, index reffers to a player who made the last move
     public uint TotalTurns {get; set;} // Number of turns taken
     private uint turn;
-    // public uint Turn // Index for the Players array, index reffers to a player who's turn it is
-    // {
-    //     // get => turn%Player.Count; // never go out of bounds (say turn = 23 (24th) and there are 7 players (0 .. 6), 23 % 7 = 2)
-    //     // set => turn = value; // set as normal
-    // }
+    public uint Turn // Index for the Players array, index reffers to a player who's turn it is
+    {
+        get => turn%(uint)Players.Count; // never go out of bounds (say turn = 23 (24th) and there are 7 players (0 .. 6), 23 % 7 = 2)
+        set => turn = value; // set as normal
+    }
     public GameCoordinator(Grid grid, List<Player> players)
     {
         Grid = grid;
