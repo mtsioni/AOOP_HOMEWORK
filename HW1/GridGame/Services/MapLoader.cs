@@ -1,2 +1,2 @@
-//namespace datalayer;
+//namespace GridGame.Services;
 // to be continued...

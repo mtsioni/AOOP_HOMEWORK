@@ -1,4 +1,5 @@
-namespace logiclayer;
+// namespace logiclayer;
+namespace GridGame.Models;
 public class Grid
 {
 

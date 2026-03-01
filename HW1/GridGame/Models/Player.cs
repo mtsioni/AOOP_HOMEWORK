@@ -1,4 +1,5 @@
-namespace logiclayer;
+// namespace logiclayer;
+namespace GridGame.Models;
 public class Player
 {
     public uint PlayerID {get; set;} //id of a player, same number as the value of a cell of a grid that belong to the player

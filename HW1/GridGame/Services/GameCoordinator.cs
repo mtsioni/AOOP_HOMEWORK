@@ -1,4 +1,6 @@
-namespace logiclayer;
+using GridGame.Models;
+// namespace logiclayer;
+namespace GridGame.Services;
 public class GameCoordinator
 {
     public Grid Grid {get; private set;} // Grid of the game
