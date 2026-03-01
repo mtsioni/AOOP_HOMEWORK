@@ -13,6 +13,7 @@ public class GameViewModel : ViewModelBase
     public uint Columns => _coordinator.Grid.Columns;
     public ObservableCollection<CellViewModel> Cells { get; } // is like a List but the UI automatically updates when items are added or removed
     public ObservableCollection<PlayerViewModel> Players { get; } // players
+    public double GridDisplayWidth => (_coordinator.Grid.Columns + 1) * 52.0; // 50 for the cell size + 2 for the border; we add 1 to columns because we also show the right border of the last column
 
     // ─── Turn info ───
     private uint _turnNumber;

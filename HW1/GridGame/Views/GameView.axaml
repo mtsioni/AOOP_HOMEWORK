@@ -2,9 +2,142 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GridGame.Views.GameView">
 
-    <!-- Temporary placeholder -->
-    <TextBlock Text="Game View - Coming Soon"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center" />
+    <!-- Main 4-row, 2-column grid -->
+    <Grid RowDefinitions="Auto,Auto,*,Auto" ColumnDefinitions="*,200">
+
+        <!-- Win Banner (Row 0, spans both columns) -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2"
+                Background="#FFD700"
+                IsVisible="{Binding IsGameOver}"
+                Padding="20">
+            <TextBlock Text="{Binding WinMessage}"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="#000000" />
+        </Border>
+
+        <!-- Turn Info (Row 1, left column) -->
+        <StackPanel Grid.Row="1" Grid.Column="0"
+                   Orientation="Horizontal"
+                   Spacing="30"
+                   Margin="20">
+            
+            <StackPanel Spacing="5">
+                <TextBlock Text="Turn No."
+                           FontSize="11"
+                           Foreground="#888888" />
+                <TextBlock Text="{Binding TurnNumber}"
+                           FontSize="20"
+                           FontWeight="Bold" />
+            </StackPanel>
+
+            <StackPanel Spacing="5">
+                <TextBlock Text="Current Player"
+                           FontSize="11"
+                           Foreground="#888888" />
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Rectangle Width="24" Height="24"
+                               Fill="{Binding CurrentPlayerColor}" />
+                    <TextBlock Text="{Binding CurrentPlayerName}"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Game Grid (Row 2, left column) -->
+        <ScrollViewer Grid.Row="2" Grid.Column="0"
+                      Padding="20"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Cells}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Width="{Binding GridDisplayWidth}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Width="50"
+                                Height="50"
+                                Margin="2"
+                                Background="{Binding BackgroundColor}"
+                                BorderThickness="1"
+                                BorderBrush="#444444"
+                                Padding="0"
+                                Click="OnCellClicked" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Right Panel (Rows 1-2, column 1) -->
+        <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1"
+                   Spacing="15"
+                   Margin="15"
+                   Background="#1A1A1A">
+
+            <!-- Players -->
+            <TextBlock Text="Players"
+                       FontSize="14"
+                       FontWeight="Bold" />
+            <ListBox ItemsSource="{Binding Players}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     MaxHeight="250">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal"
+                                   Spacing="10"
+                                   Margin="8">
+                            <Rectangle Width="20" Height="20"
+                                       Fill="{Binding DisplayColor}" />
+                            <TextBlock Text="{Binding DisplayName}"
+                                       FontWeight="Bold" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Separator Background="#444444" />
+
+            <!-- Available Moves -->
+            <TextBlock Text="Available Moves"
+                       FontSize="11"
+                       Foreground="#888888" />
+            <TextBlock Text="{Binding AvailableMoves}"
+                       FontSize="28"
+                       FontWeight="Bold" />
+
+        </StackPanel>
+
+        <!-- Bottom Controls (Row 3, spans both columns) -->
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2"
+                   Orientation="Horizontal"
+                   Spacing="15"
+                   Margin="20"
+                   Background="#1A1A1A">
+
+            <TextBlock Text="Map Preset:"
+                       VerticalAlignment="Center"
+                       FontSize="12" />
+            <ComboBox Width="150"
+                      SelectedIndex="0"
+                      Background="#2A2A2A">
+                <ComboBoxItem>Default</ComboBoxItem>
+                <ComboBoxItem>With Walls</ComboBoxItem>
+            </ComboBox>
+
+            <Button Content="Confirm Move"
+                    Click="OnConfirmClicked"
+                    Padding="20,10"
+                    Background="#0066CC"
+                    Foreground="White" />
+        </StackPanel>
+
+    </Grid>
 
 </UserControl>
