@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using GridGame.ViewModels;
@@ -13,20 +14,33 @@ public partial class SetupView : UserControl // "code-behind" for SetupView.axam
         DataContext = new SetupViewModel(); // Create and attach the ViewModel
     }
 
+     // Called whenever a player name TextBox changes
+    private void OnPlayerNameChanged(object sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (DataContext is SetupViewModel vm)
+        {
+            // Tell ViewModel to re-check if we can start
+            vm.OnPlayerNameChanged();
+        }
+    }
+
     // Called when the Start Game button is clicked
     private void OnStartGameClicked(object sender, RoutedEventArgs e)
     {
-        if (DataContext is not SetupViewModel vm) return;
+       if (DataContext is not SetupViewModel setupVM) return;
 
-        var (rows, columns, players) = vm.GetGameSetup(); // Get the setup data
+        // Get the setup data (player names, colors, board size)
+        var (rows, columns, players) = setupVM.GetGameSetup();
 
-        var gameVM = new GameViewModel(rows, columns, players); // Create the GameViewModel with this setup data
+        // Create the GameViewModel with this data
+        var gameVM = new GameViewModel(rows, columns, players);
 
-
-        // Switch the main window to show GameView instead of SetupView
-        // to be implemeted....
-        
-        // For now, I will just show  log success
-        System.Diagnostics.Debug.WriteLine($"Starting game with {players.Count} players on {rows}x{columns}");
+        // Find the root window and get its ViewModel
+        var mainWindow = TopLevel.GetTopLevel(this) as Window;
+        if (mainWindow?.DataContext is MainWindowViewModel mainVM)
+        {
+            // Switch the view to GameView by setting the GameViewModel
+            mainVM.CurrentView = gameVM;
+        }
     }
 }

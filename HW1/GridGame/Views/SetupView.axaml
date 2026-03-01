@@ -37,7 +37,9 @@
 
                             <TextBox Text="{Binding Name}"
                                      Watermark="Enter player name"
-                                     MinWidth="200" />
+                                     MinWidth="200" 
+                                     PropertyChanged="OnPlayerNameChanged"
+                                     />
 
                             <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.AvailableColors}"
                                       SelectedItem="{Binding Color}"
