@@ -33,22 +33,6 @@ public class Grid
     {
         return column + row*(Columns+1);
     }
-    public int GetCell(int index) // returns value of a cell at a given index
-    {
-        return Cells[index];
-    }
-    public int GetCell(int row, int column) // returns value of a cell at a given row and column
-    {
-        return Cells[RowColumnToIndex(row, column)];
-    }
-    public void SetCell(int value, int index) //sets cell to a given value at a given index
-    {
-        Cells[index] = value;
-    }
-    public void SetCell(int value, int row, int column) //sets cell to a given value at a given row and column
-    {
-        Cells[RowColumnToIndex(row, column)] = value;
-    }
     public void SetGrid(int[] grid, int rows, int columns) // sets grid to given values and dimensions
     {
         Cells = grid;
@@ -58,7 +42,7 @@ public class Grid
     public bool CheckAdjacentCells(int value, int? index) // returns true if any adjacent cell is of the desired value
     {
         bool ans = false; // return variable
-        int? targetIndex = (int?)index; // target index, check around it
+        int? targetIndex = index; // target index, check around it
         int indexModifier; // adjusts index to look at adjacent cells
         for (int i = 0; i < 9; i++)
         {
@@ -85,7 +69,7 @@ public class Grid
             */
             try // try - to avoid index out of bounds exception
             {
-                if (Cells[(int)targetIndex + indexModifier + (i-1)] == value) // Check if cell adjacent to target holds the desired value
+                if (Cells[(int)targetIndex + indexModifier + (i%3-1)] == value) // Check if cell adjacent to target holds the desired value
                 {
                     ans = true; //set ans to true and stop checking
                     break;
@@ -102,7 +86,7 @@ public class Grid
     public bool CheckAdjacentCells(int value, int? row, int? column) // returns true if any adjacent cell is of the desired value
     {
         bool ans = false; // return variable
-        int? targetRow = (int?)row, targetColumn = (int?)column; // target row and column meaning around what cell we seatch
+        int? targetRow = row, targetColumn = column; // target row and column meaning around what cell we seatch
         int rowModifier, columnModifier; // these will be added to a target row and column to check contents of adjacent cells
         for(int i = 0; i < 9; i++)
         {
