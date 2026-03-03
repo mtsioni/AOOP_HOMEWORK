@@ -41,9 +41,13 @@ public partial class SetupView : UserControl // "code-behind" for SetupView.axam
 
         var players = setupVM.GetPlayers();
 
-        var (cells, rows, cols) = LoadPreset1();
+        var preset1 = new Models.MapDefinition(
+        cells: new int[(5 + 1) * (5 + 1)], // 6x6 empty map
+        rows: 5,
+        columns: 5
+    );
 
-        var gameVM = new GameViewModel(cells, rows, cols, players);
+        var gameVM = new GameViewModel(preset1.Cells, preset1.Rows, preset1.Columns, players);
 
         var mainWindow = TopLevel.GetTopLevel(this) as Window;
         if (mainWindow?.DataContext is MainWindowViewModel mainVM)
