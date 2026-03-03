@@ -19,10 +19,10 @@
 
         <!-- Turn Info (Row 1, left column) -->
         <StackPanel Grid.Row="1" Grid.Column="0"
-                   Orientation="Horizontal"
-                   Spacing="30"
-                   Margin="20">
-            
+                    Orientation="Horizontal"
+                    Spacing="30"
+                    Margin="20">
+
             <StackPanel Spacing="5">
                 <TextBlock Text="Turn No."
                            FontSize="11"
@@ -76,9 +76,9 @@
 
         <!-- Right Panel (Rows 1-2, column 1) -->
         <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1"
-                   Spacing="15"
-                   Margin="15"
-                   Background="#1A1A1A">
+                    Spacing="15"
+                    Margin="15"
+                    Background="#1A1A1A">
 
             <!-- Players -->
             <TextBlock Text="Players"
@@ -91,8 +91,8 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal"
-                                   Spacing="10"
-                                   Margin="8">
+                                    Spacing="10"
+                                    Margin="8">
                             <Rectangle Width="20" Height="20"
                                        Fill="{Binding DisplayColor}" />
                             <TextBlock Text="{Binding DisplayName}"
@@ -115,28 +115,43 @@
         </StackPanel>
 
         <!-- Bottom Controls (Row 3, spans both columns) -->
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="2"
-                   Orientation="Horizontal"
-                   Spacing="15"
-                   Margin="20"
-                   Background="#1A1A1A">
+        <Grid Grid.Row="3" Grid.ColumnSpan="2"
+              ColumnDefinitions="Auto,*,Auto"
+              Margin="20"
+              Background="#1A1A1A">
 
-            <TextBlock Text="Map Preset:"
-                       VerticalAlignment="Center"
-                       FontSize="12" />
-            <ComboBox Width="150"
-                      SelectedIndex="0"
-                      Background="#2A2A2A">
-                <ComboBoxItem>Default</ComboBoxItem>
-                <ComboBoxItem>With Walls</ComboBoxItem>
-            </ComboBox>
+            <!-- Left controls -->
+            <StackPanel Grid.Column="0"
+                        Orientation="Horizontal"
+                        Spacing="15">
+                <TextBlock Text="Map Preset:"
+                           VerticalAlignment="Center"
+                           FontSize="12" />
+                <ComboBox Width="150"
+                          ItemsSource="{Binding Presets}"
+                          SelectedItem="{Binding SelectedPreset}"
+                          SelectionChanged="OnPresetChanged" />
 
-            <Button Content="Confirm Move"
-                    Click="OnConfirmClicked"
-                    Padding="20,10"
-                    Background="#0066CC"
-                    Foreground="White" />
-        </StackPanel>
+                <Button Content="Confirm Move"
+                        Click="OnConfirmClicked"
+                        Padding="20,10"
+                        Background="#0066CC"
+                        Foreground="White" />
+            </StackPanel>
+
+            <!-- Right controls -->
+            <StackPanel Grid.Column="2"
+                        Orientation="Horizontal"
+                        Spacing="15">
+                <Button Content="Save"
+                        Click="OnSaveClicked"
+                        Padding="20,10" />
+
+                <Button Content="Reset"
+                        Click="OnResetClicked"
+                        Padding="20,10" />
+            </StackPanel>
+        </Grid>
 
     </Grid>
 

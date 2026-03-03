@@ -13,7 +13,7 @@
 
         <!-- Player Count Selection -->
         <StackPanel Spacing="10"
-                   Margin="20,0,20,0">
+                    Margin="20,0,20,0">
             <TextBlock Text="Number of Players:"
                        FontSize="16" />
             <ComboBox ItemsSource="{Binding AvailablePlayerCounts}"
@@ -23,7 +23,7 @@
 
         <!-- Player Setup List -->
         <StackPanel Spacing="10"
-                   Margin="20,0,20,0">
+                    Margin="20,0,20,0">
             <TextBlock Text="Player Setup:"
                        FontSize="16" />
             <ListBox ItemsSource="{Binding Players}"
@@ -33,17 +33,27 @@
                         <StackPanel Orientation="Horizontal" Spacing="15" Margin="10">
                             <Rectangle Width="30"
                                        Height="30"
-                                       Fill="{Binding Color}" />
+                                       Fill="{Binding ColorHex}" />
 
                             <TextBox Text="{Binding Name}"
                                      Watermark="Enter player name"
-                                     MinWidth="200" 
+                                     MinWidth="200"
                                      PropertyChanged="OnPlayerNameChanged"
                                      />
 
-                            <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.AvailableColors}"
-                                      SelectedItem="{Binding Color}"
-                                      Width="100" />
+                            <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl},
+                            Path=DataContext.AvailableColors}"
+                            SelectedItem="{Binding SelectedColor}"
+                            Width="140">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Rectangle Width="14" Height="14" Fill="{Binding Hex}" />
+                                            <TextBlock Text="{Binding Name}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

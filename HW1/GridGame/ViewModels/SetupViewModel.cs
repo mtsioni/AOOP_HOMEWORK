@@ -4,6 +4,20 @@ using System.Collections.ObjectModel;
 
 namespace GridGame.ViewModels;
 
+public class ColorOption
+{
+    public string Name { get; }
+    public string Hex { get; }
+
+    public ColorOption(string name, string hex)
+    {
+        Name = name;
+        Hex = hex;
+    }
+    // returns this below in case no template is provided
+    public override string ToString() => Name;
+}
+
 public class SetupPlayerViewModel : ViewModelBase // One player during setup
 {
     private string _name = string.Empty;
@@ -17,36 +31,39 @@ public class SetupPlayerViewModel : ViewModelBase // One player during setup
         }
     }
 
-    private string _color = "#FF0000"; // Default to red
-    public string Color
+    private ColorOption _selectedColor;
+    public ColorOption SelectedColor
     {
-        get => _color;
+        get => _selectedColor;
         set
         {
-            _color = value;
+            _selectedColor = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ColorHex));
         }
     }
+    public string ColorHex => SelectedColor.Hex;
 
-    public SetupPlayerViewModel(string initialColor)
+
+    public SetupPlayerViewModel(ColorOption initialColor)
     {
-        _color = initialColor;
+        _selectedColor = initialColor;
     }
 }
 
 public class SetupViewModel : ViewModelBase // Main setup view model
 {
-    public ObservableCollection<string> AvailableColors { get; } = new()
-    {
-        "#FF0000",
-        "#00FF00",
-        "#0000FF",
-        "#FF00FF",
-        "#FFFF00",
-        "#00FFFF",
-        "#FFA500",
-        "#FFFFFF"
-    };
+    public ObservableCollection<ColorOption> AvailableColors { get; } = new()
+{
+    new ColorOption("Red", "#FF0000"),
+    new ColorOption("Green", "#00FF00"),
+    new ColorOption("Blue", "#0000FF"),
+    new ColorOption("Purple", "#FF00FF"),
+    new ColorOption("Yellow", "#FFFF00"),
+    new ColorOption("Cyan", "#00FFFF"),
+    new ColorOption("Orange", "#FFA500"),
+    new ColorOption("White", "#FFFFFF"),
+};
 
     public List<int> AvailablePlayerCounts { get; } = new() { 2, 3, 4, 5 };
     private int _playerCount = 2;  // Number of players = 2-5, default to 2
@@ -82,7 +99,7 @@ public class SetupViewModel : ViewModelBase // Main setup view model
         // Cycle through available colors
         for (int i = 0; i < _playerCount; i++)
         {
-            string color = AvailableColors[i % AvailableColors.Count];
+            var color = AvailableColors[(int)(i % AvailableColors.Count)];
             Players.Add(new SetupPlayerViewModel(color));
         }
 
@@ -97,6 +114,6 @@ public class SetupViewModel : ViewModelBase // Main setup view model
 
     public List<(string Name, string Color)> GetPlayers()
     {
-        return Players.Select(p => (p.Name, p.Color)).ToList();
+        return Players.Select(p => (p.Name, p.ColorHex)).ToList();
     }
 }
