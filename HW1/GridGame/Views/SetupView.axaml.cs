@@ -10,11 +10,11 @@ public partial class SetupView : UserControl // "code-behind" for SetupView.axam
     public SetupView()
     {
         InitializeComponent(); // Initialize the AXAML UI
-        
+
         DataContext = new SetupViewModel(); // Create and attach the ViewModel
     }
 
-     // Called whenever a player name TextBox changes
+    // Called whenever a player name TextBox changes
     private void OnPlayerNameChanged(object sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (DataContext is SetupViewModel vm) // WHAT IS THIS
@@ -24,22 +24,30 @@ public partial class SetupView : UserControl // "code-behind" for SetupView.axam
         }
     }
 
+    private static (int[] Cells, int Rows, int Columns) LoadPreset1()
+    {
+        // Temporary: load fake hardcoded "Preset #1" size. Change here.
+        int rows = 5;
+        int cols = 5;
+
+        int[] cells = new int[(rows + 1) * (cols + 1)];
+        return (cells, rows, cols);
+    }
+
     // Called when the Start Game button is clicked
     private void OnStartGameClicked(object sender, RoutedEventArgs e)
     {
-       if (DataContext is not SetupViewModel setupVM) return;
+        if (DataContext is not SetupViewModel setupVM) return;
 
-        // Get the setup data (player names, colors, board size)
-        var (rows, columns, players) = setupVM.GetGameSetup();
+        var players = setupVM.GetPlayers();
 
-        // Create the GameViewModel with this data
-        var gameVM = new GameViewModel(rows-1, columns-1, players);
+        var (cells, rows, cols) = LoadPreset1();
 
-        // Find the root window and get its ViewModel
+        var gameVM = new GameViewModel(cells, rows, cols, players);
+
         var mainWindow = TopLevel.GetTopLevel(this) as Window;
         if (mainWindow?.DataContext is MainWindowViewModel mainVM)
         {
-            // Switch the view to GameView by setting the GameViewModel
             mainVM.CurrentView = gameVM;
         }
     }

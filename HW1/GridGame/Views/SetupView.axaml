@@ -50,16 +50,6 @@
             </ListBox>
         </StackPanel>
 
-        <!-- Board Size Selection -->
-        <StackPanel Spacing="10"
-                   Margin="20,0,20,0">
-            <TextBlock Text="Board Size:"
-                       FontSize="16" />
-            <ComboBox ItemsSource="{Binding AvailableSizes}"
-                      SelectedItem="{Binding SelectedSize}"
-                      Width="150" />
-        </StackPanel>
-
         <!-- Start Button -->
         <Button Content="Start Game"
                 IsEnabled="{Binding CanStart}"

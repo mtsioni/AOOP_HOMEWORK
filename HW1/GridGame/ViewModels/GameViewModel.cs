@@ -81,7 +81,7 @@ public class GameViewModel : ViewModelBase
     private CellViewModel? _selectedCell; // the cell the current player has clicked but not confirmed yet
 
     // ─── Constructor ──────
-    public GameViewModel(int rows, int columns, List<(string Name, string Color)> playerSetup)
+    public GameViewModel(int[] cells, int rows, int columns, List<(string Name, string Color)> playerSetup)
     {
         var playerModels = playerSetup // player id's start at 2 (0=empty, 1=wall)
             .Select((p, i) => new Player(i + 2, p.Color, p.Name))
