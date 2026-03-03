@@ -4,18 +4,18 @@ public class Grid
 {
 
     // had to change the name from Grid to Cells cause: " error CS0542: 'Grid': member names cannot be the same as their enclosing type "
-    public uint[] Cells {get; private set;} // index - adress of a cell of a grid, values of cells: 0 - empty, 1 - wall, 2...n - players
-    public uint Rows {get; private set;} // Rows, 0 is first
-    public uint Columns {get; private set;} // Columns, 0 is first
+    public int[] Cells {get; private set;} // index - adress of a cell of a grid, values of cells: 0 - empty, 1 - wall, 2...n - players
+    public int Rows {get; private set;} // Rows, 0 is first
+    public int Columns {get; private set;} // Columns, 0 is first
     public Grid() // default constructor, makes an empty 1x1 grid
     {
-        Cells = new uint[1];
+        Cells = new int[1];
         Rows = 0;
         Columns = 0;    
     }
-    public Grid(uint rows, uint columns) // constructor that makes an empty grid of specified dimensions
+    public Grid(int rows, int columns) // constructor that makes an empty grid of specified dimensions
     {
-        Cells = new uint[(rows+1)*(columns+1)];
+        Cells = new int[(rows+1)*(columns+1)];
         Rows = rows;
         Columns = columns;
         for (int i = 0; i < (rows+1)*(columns+1); i++)
@@ -23,39 +23,39 @@ public class Grid
             Cells[i] = 0;
         }
     }
-    public Grid(uint[] grid, uint rows, uint columns) // constructor that creates a grid of specified dimensions and contents
+    public Grid(int[] cells, int rows, int columns) // constructor that creates a grid of specified dimensions and contents
     {
-        Cells = grid;
+        Cells = cells;
         Rows = rows;
         Columns = columns;
     }
-    public uint RowColumnToIndex(uint row, uint column) // parses row and column to index
+    public int RowColumnToIndex(int row, int column) // parses row and column to index
     {
         return column + row*(Columns+1);
     }
-    public uint GetCell(uint index) // returns value of a cell at a given index
+    public int GetCell(int index) // returns value of a cell at a given index
     {
         return Cells[index];
     }
-    public uint GetCell(uint row, uint column) // returns value of a cell at a given row and column
+    public int GetCell(int row, int column) // returns value of a cell at a given row and column
     {
         return Cells[RowColumnToIndex(row, column)];
     }
-    public void SetCell(uint value, uint index) //sets cell to a given value at a given index
+    public void SetCell(int value, int index) //sets cell to a given value at a given index
     {
         Cells[index] = value;
     }
-    public void SetCell(uint value, uint row, uint column) //sets cell to a given value at a given row and column
+    public void SetCell(int value, int row, int column) //sets cell to a given value at a given row and column
     {
         Cells[RowColumnToIndex(row, column)] = value;
     }
-    public void SetGrid(uint[] grid, uint rows, uint columns) // sets grid to given values and dimensions
+    public void SetGrid(int[] grid, int rows, int columns) // sets grid to given values and dimensions
     {
         Cells = grid;
         Rows = rows;
         Columns = columns;
     }
-    public bool CheckAdjacentCells(uint value, uint? index) // returns true if any adjacent cell is of the desired value
+    public bool CheckAdjacentCells(int value, int? index) // returns true if any adjacent cell is of the desired value
     {
         bool ans = false; // return variable
         int? targetIndex = (int?)index; // target index, check around it
@@ -68,7 +68,7 @@ public class Grid
                 continue;
             if (i < 3) // searching above - substract number of Columns
             {
-                // indexModifier = (Columns+1)*-1;
+                indexModifier = (Columns+1)*-1;
             }
             else if(i < 6) // searching left and right, do nothing
             {
@@ -76,7 +76,7 @@ public class Grid
             }
             else // seatching below, add number of columns
             {
-                // indexModifier = Columns+1;
+                indexModifier = Columns+1;
             }
             /*   0   1   2
             * 0 [0] [1] [2]
@@ -85,21 +85,21 @@ public class Grid
             */
             try // try - to avoid index out of bounds exception
             {
-                // if (Cells[targetIndex + indexModifier + (i-1)] == value) // Check if cell adjacent to target holds the desired value
-                // {
-                //     ans = true; //set ans to true and stop checking
-                //     break;
-                // }
-                // else continue;
+                if (Cells[(int)targetIndex + indexModifier + (i-1)] == value) // Check if cell adjacent to target holds the desired value
+                {
+                    ans = true; //set ans to true and stop checking
+                    break;
+                }
+                else continue;
             }
-            catch (Exception e) // skip whatever is wrong
+            catch (Exception) // skip whatever is wrong
             {
                 continue;
             }
         }
         return ans;
     }
-    public bool CheckAdjacentCells(uint value, uint? row, uint? column) // returns true if any adjacent cell is of the desired value
+    public bool CheckAdjacentCells(int value, int? row, int? column) // returns true if any adjacent cell is of the desired value
     {
         bool ans = false; // return variable
         int? targetRow = (int?)row, targetColumn = (int?)column; // target row and column meaning around what cell we seatch
@@ -132,15 +132,16 @@ public class Grid
             */
             try // try - to avoid index out of bounds exception
             {
-                if (Cells[RowColumnToIndex((uint)(targetRow+rowModifier),(uint)(targetColumn+columnModifier))] == value) // Check if cell adjacent to target holds the desired value
+                if (Cells[RowColumnToIndex((int)targetRow+rowModifier,(int)targetColumn+columnModifier)] == value) // Check if cell adjacent to target holds the desired value
                 {
                     ans = true; //set ans to true and stop checking
                     break;
                 }
                 else continue;
             }
-            catch (Exception e) // skip whatever is wrong
+            catch (Exception) // skip whatever is wrong
             {
+
                 continue;
             }
         }

@@ -4,11 +4,11 @@ namespace GridGame.ViewModels;
 public class CellViewModel : ViewModelBase
 {
     // Row & Column tells us where this cell lives on the grid
-    public uint Row { get; }  // not set; because the cell's position never changes, 
+    public int Row { get; }  // not set; because the cell's position never changes, 
                               // automatically a readonly because its setted in the constructor
-    public uint Column { get; }  // -||-
-    private uint _value; // 0 -> empty, 1 -> wall, 2...n -> players
-    public uint Value
+    public int Column { get; }  // -||-
+    private int _value; // 0 -> empty, 1 -> wall, 2...n -> players
+    public int Value
     {
         get => _value;
         set
@@ -59,7 +59,7 @@ public class CellViewModel : ViewModelBase
     }
 
 
-    public CellViewModel(uint row, uint column, uint value, List<string> playerColors) //constructor, needs to know its position, value and player colors to know how to paint itself
+    public CellViewModel(int row, int column, int value, List<string> playerColors) //constructor, needs to know its position, value and player colors to know how to paint itself
     {
         Row = row;
         Column = column;

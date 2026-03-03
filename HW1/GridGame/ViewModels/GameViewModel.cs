@@ -9,15 +9,15 @@ namespace GridGame.ViewModels;
 public class GameViewModel : ViewModelBase
 {
     private readonly GameCoordinator _coordinator; //game engine
-    public uint Rows => _coordinator.Grid.Rows;
-    public uint Columns => _coordinator.Grid.Columns;
+    public int Rows => _coordinator.Grid.Rows;
+    public int Columns => _coordinator.Grid.Columns;
     public ObservableCollection<CellViewModel> Cells { get; } // is like a List but the UI automatically updates when items are added or removed
     public ObservableCollection<PlayerViewModel> Players { get; } // players
     public double GridDisplayWidth => (_coordinator.Grid.Columns + 1) * 52.0; // 50 for the cell size + 2 for the border; we add 1 to columns because we also show the right border of the last column
 
     // ─── Turn info ───
-    private uint _turnNumber;
-    public uint TurnNumber
+    private int _turnNumber;
+    public int TurnNumber
     {
         get => _turnNumber;
         set
@@ -67,8 +67,8 @@ public class GameViewModel : ViewModelBase
     public bool IsGameOver => !string.IsNullOrEmpty(_winMessage);
 
     // ─── Available moves ────
-    private uint _availableMoves;
-    public uint AvailableMoves
+    private int _availableMoves;
+    public int AvailableMoves
     {
         get => _availableMoves;
         set
@@ -81,10 +81,10 @@ public class GameViewModel : ViewModelBase
     private CellViewModel? _selectedCell; // the cell the current player has clicked but not confirmed yet
 
     // ─── Constructor ──────
-    public GameViewModel(uint rows, uint columns, List<(string Name, string Color)> playerSetup)
+    public GameViewModel(int rows, int columns, List<(string Name, string Color)> playerSetup)
     {
         var playerModels = playerSetup // player id's start at 2 (0=empty, 1=wall)
-            .Select((p, i) => new Player((uint)(i + 2), p.Color, p.Name))
+            .Select((p, i) => new Player(i + 2, p.Color, p.Name))
             .ToList();
 
         var playerColors = playerSetup.Select(p => p.Color).ToList(); // extract just the color list to share with all cells
@@ -96,9 +96,9 @@ public class GameViewModel : ViewModelBase
         );
 
         Cells = new ObservableCollection<CellViewModel>();  // build CellViewModels; one per cell
-        for (uint r = 0; r < rows; r++)
+        for (int r = 0; r < rows; r++)
         {
-            for (uint c = 0; c < columns; c++)
+            for (int c = 0; c < columns; c++)
             {
                 Cells.Add(new CellViewModel(r, c, 0, playerColors));
             }
@@ -123,7 +123,7 @@ public class GameViewModel : ViewModelBase
         if (_selectedCell == null) return;
 
         // tell the coordinator which cell the player selected
-        var currentPlayer = _coordinator.Players[(int)_coordinator.Turn];
+        var currentPlayer = _coordinator.Players[_coordinator.Turn];
         currentPlayer.SelectedRow = _selectedCell.Row;
         currentPlayer.SelectedColumn = _selectedCell.Column;
 
@@ -153,17 +153,17 @@ public class GameViewModel : ViewModelBase
     private void RefreshTurnInfo()  // updates turn number, current player name and color
     {
         TurnNumber = _coordinator.TotalTurns;
-        var current = Players[(int)_coordinator.Turn];
+        var current = Players[_coordinator.Turn];
         CurrentPlayerName = current.DisplayName;
         CurrentPlayerColor = current.Color;
-        AvailableMoves = _coordinator.Players[(int)_coordinator.Turn].MovesLeft ?? 0;
+        AvailableMoves = _coordinator.Players[_coordinator.Turn].MovesLeft ?? 0;
     }
 
     private void RefreshPlayers() // tells each PlayerViewModel whether it is their turn
     {
         for (int i = 0; i < Players.Count; i++)
         {
-            Players[i].IsActive = (i == (int)_coordinator.Turn);
+            Players[i].IsActive = (i == _coordinator.Turn);
             Players[i].Refresh();
         }
     }

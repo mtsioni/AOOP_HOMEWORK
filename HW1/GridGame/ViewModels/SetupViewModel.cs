@@ -52,9 +52,9 @@ public class SetupViewModel : ViewModelBase // Main setup view model
         "6x6", "8x8", "10x10"
     };
 
-    public List<uint> AvailablePlayerCounts { get; } = new() { 2, 3, 4, 5 };
-    private uint _playerCount = 2;  // Number of players = 2-5, default to 2
-    public uint PlayerCount
+    public List<int> AvailablePlayerCounts { get; } = new() { 2, 3, 4, 5 };
+    private int _playerCount = 2;  // Number of players = 2-5, default to 2
+    public int PlayerCount
     {
         get => _playerCount;
         set
@@ -94,7 +94,7 @@ public class SetupViewModel : ViewModelBase // Main setup view model
         Players.Clear();
 
         // Cycle through available colors
-        for (uint i = 0; i < _playerCount; i++)
+        for (int i = 0; i < _playerCount; i++)
         {
             string color = AvailableColors[(int)(i % AvailableColors.Count)];
             Players.Add(new SetupPlayerViewModel(color));
@@ -110,11 +110,11 @@ public class SetupViewModel : ViewModelBase // Main setup view model
     }
 
     // Called when user clicks Start Game. Returns the setup data to pass to GameViewModel
-    public (uint Rows, uint Columns, List<(string Name, string Color)> Players) GetGameSetup()
+    public (int Rows, int Columns, List<(string Name, string Color)> Players) GetGameSetup()
     {
         // Parse "6x6/8x8/10x10" into rows and columns.. eg.  gives ["6", "6"] → size = 6
         var sizeParts = SelectedSize.Split('x');
-        uint size = uint.Parse(sizeParts[0]);
+        int size = int.Parse(sizeParts[0]);
 
         // Collect player names and colors
         var playerData = Players
