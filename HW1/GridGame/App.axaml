@@ -3,7 +3,7 @@
              xmlns:v="using:GridGame.Views"
              xmlns:vm="using:GridGame.ViewModels"
              x:Class="GridGame.App"
-             RequestedThemeVariant="Default">
+             RequestedThemeVariant="Dark">
 
     <Application.Styles>
         <FluentTheme />
