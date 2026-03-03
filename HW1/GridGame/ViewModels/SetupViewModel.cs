@@ -47,10 +47,6 @@ public class SetupViewModel : ViewModelBase // Main setup view model
         "#FFA500",
         "#FFFFFF"
     };
-    public List<string> AvailableSizes { get; } = new()   // Available board sizes
-    {
-        "6x6", "8x8", "10x10"
-    };
 
     public List<int> AvailablePlayerCounts { get; } = new() { 2, 3, 4, 5 };
     private int _playerCount = 2;  // Number of players = 2-5, default to 2
@@ -68,16 +64,6 @@ public class SetupViewModel : ViewModelBase // Main setup view model
 
     public ObservableCollection<SetupPlayerViewModel> Players { get; } = new(); // The list of players being set up
 
-    private string _selectedSize = "6x6"; // Selected board size (e.g. "6x6")
-    public string SelectedSize
-    {
-        get => _selectedSize;
-        set
-        {
-            _selectedSize = value;
-            OnPropertyChanged();
-        }
-    }
 
     // Whether we can proceed w/ the game (all players must have names)
     public bool CanStart => Players.All(p => !string.IsNullOrWhiteSpace(p.Name));
@@ -109,18 +95,8 @@ public class SetupViewModel : ViewModelBase // Main setup view model
         OnPropertyChanged(nameof(CanStart));
     }
 
-    // Called when user clicks Start Game. Returns the setup data to pass to GameViewModel
-    public (int Rows, int Columns, List<(string Name, string Color)> Players) GetGameSetup()
+    public List<(string Name, string Color)> GetPlayers()
     {
-        // Parse "6x6/8x8/10x10" into rows and columns.. eg.  gives ["6", "6"] → size[0] = 6
-        var sizeParts = SelectedSize.Split('x');
-        int[] size = {int.Parse(sizeParts[0]), int.Parse(sizeParts[1])};
-
-        // Collect player names and colors
-        var playerData = Players
-            .Select(p => (p.Name, p.Color))
-            .ToList();
-
-        return (size[0], size[1], playerData);
+        return Players.Select(p => (p.Name, p.Color)).ToList();
     }
 }
