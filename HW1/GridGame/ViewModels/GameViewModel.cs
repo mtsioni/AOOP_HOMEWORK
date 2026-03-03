@@ -8,7 +8,7 @@ namespace GridGame.ViewModels;
 
 public class GameViewModel : ViewModelBase
 {
-    private readonly GameCoordinator _coordinator; //game engine
+    private readonly GameCoordinator _coordinator; //game engine, (thanks for calling it an engine)
     public int Rows => _coordinator.Grid.Rows;
     public int Columns => _coordinator.Grid.Columns;
     public ObservableCollection<CellViewModel> Cells { get; } // is like a List but the UI automatically updates when items are added or removed
@@ -87,7 +87,6 @@ public class GameViewModel : ViewModelBase
             .Select((p, i) => new Player(i + 2, p.Color, p.Name))
             .ToList();
 
-        var playerColors = playerSetup.Select(p => p.Color).ToList(); // extract just the color list to share with all cells
         var grid = new Grid(rows, columns); // create the coordinator with an empty grid
 
         _coordinator = new GameCoordinator(grid, playerModels);
@@ -96,11 +95,11 @@ public class GameViewModel : ViewModelBase
         );
 
         Cells = new ObservableCollection<CellViewModel>();  // build CellViewModels; one per cell
-        for (int r = 0; r < rows; r++)
+        for (int r = 0; r < rows+1; r++)
         {
-            for (int c = 0; c < columns; c++)
+            for (int c = 0; c < columns+1; c++)
             {
-                Cells.Add(new CellViewModel(r, c, 0, playerColors));
+                Cells.Add(new CellViewModel(r, c, 0, _coordinator.Players));
             }
         }
 

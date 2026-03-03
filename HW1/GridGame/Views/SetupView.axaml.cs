@@ -17,7 +17,7 @@ public partial class SetupView : UserControl // "code-behind" for SetupView.axam
      // Called whenever a player name TextBox changes
     private void OnPlayerNameChanged(object sender, AvaloniaPropertyChangedEventArgs e)
     {
-        if (DataContext is SetupViewModel vm)
+        if (DataContext is SetupViewModel vm) // WHAT IS THIS
         {
             // Tell ViewModel to re-check if we can start
             vm.OnPlayerNameChanged();
@@ -33,7 +33,7 @@ public partial class SetupView : UserControl // "code-behind" for SetupView.axam
         var (rows, columns, players) = setupVM.GetGameSetup();
 
         // Create the GameViewModel with this data
-        var gameVM = new GameViewModel(rows, columns, players);
+        var gameVM = new GameViewModel(rows-1, columns-1, players);
 
         // Find the root window and get its ViewModel
         var mainWindow = TopLevel.GetTopLevel(this) as Window;

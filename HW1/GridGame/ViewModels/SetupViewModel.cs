@@ -112,15 +112,15 @@ public class SetupViewModel : ViewModelBase // Main setup view model
     // Called when user clicks Start Game. Returns the setup data to pass to GameViewModel
     public (int Rows, int Columns, List<(string Name, string Color)> Players) GetGameSetup()
     {
-        // Parse "6x6/8x8/10x10" into rows and columns.. eg.  gives ["6", "6"] → size = 6
+        // Parse "6x6/8x8/10x10" into rows and columns.. eg.  gives ["6", "6"] → size[0] = 6
         var sizeParts = SelectedSize.Split('x');
-        int size = int.Parse(sizeParts[0]);
+        int[] size = {int.Parse(sizeParts[0]), int.Parse(sizeParts[1])};
 
         // Collect player names and colors
         var playerData = Players
             .Select(p => (p.Name, p.Color))
             .ToList();
 
-        return (size, size, playerData);
+        return (size[0], size[1], playerData);
     }
 }
