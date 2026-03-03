@@ -13,6 +13,21 @@ public class GameViewModel : ViewModelBase
     public int Columns => _coordinator.Grid.Columns;
     public ObservableCollection<CellViewModel> Cells { get; } // is like a List but the UI automatically updates when items are added or removed
     public ObservableCollection<PlayerViewModel> Players { get; } // players
+    
+    // Dynamic presets list (PAVEL FILL THIS FROM JSON)
+    public ObservableCollection<MapDefinition> Presets { get; } = new();
+
+    private MapDefinition? _selectedPreset;
+    public MapDefinition? SelectedPreset
+    {
+        get => _selectedPreset;
+        set
+        {
+            _selectedPreset = value;
+            OnPropertyChanged();
+        }
+    }
+    
     public double GridDisplayWidth => (_coordinator.Grid.Columns + 1) * 54; // 50 for the cell size + 2 for the border; we add 1 to columns because we also show the right border of the last column
 
     // ─── Turn info ───
@@ -81,13 +96,15 @@ public class GameViewModel : ViewModelBase
     private CellViewModel? _selectedCell; // the cell the current player has clicked but not confirmed yet
 
     // ─── Constructor ──────
-    public GameViewModel(int[] cells, int rows, int columns, List<(string Name, string Color)> playerSetup)
+    public GameViewModel(MapDefinition initialMap, List<(string Name, string Color)> playerSetup)
     {
         var playerModels = playerSetup // player id's start at 2 (0=empty, 1=wall)
             .Select((p, i) => new Player(i + 2, p.Color, p.Name))
             .ToList();
 
-        var grid = new Grid(rows, columns); // create the coordinator with an empty grid
+        
+        var grid = new Grid(initialMap.Rows, initialMap.Columns);
+        grid.SetGrid(initialMap.Cells, initialMap.Rows, initialMap.Columns);
 
         _coordinator = new GameCoordinator(grid, playerModels);
         Players = new ObservableCollection<PlayerViewModel>(     // build PlayerViewModels
@@ -95,15 +112,62 @@ public class GameViewModel : ViewModelBase
         );
 
         Cells = new ObservableCollection<CellViewModel>();  // build CellViewModels; one per cell
-        for (int r = 0; r < rows+1; r++)
+        for (int r = 0; r < initialMap.Rows+1; r++)
         {
-            for (int c = 0; c < columns+1; c++)
+            for (int c = 0; c < initialMap.Columns+1; c++)
             {
                 Cells.Add(new CellViewModel(r, c, 0, _coordinator.Players));
             }
         }
 
-        RefreshTurnInfo(); // set initial turn display
+        // i added presets list for the dropdown (dummy for now)
+        Presets.Add(initialMap);
+        SelectedPreset = initialMap;
+
+        RefreshGrid();
+        RefreshTurnInfo();
+        RefreshPlayers();
+    }
+
+    // Called when user chooses a preset (PAVEL plug JSON here later)
+    public void LoadPreset(MapDefinition map)
+    {
+        _coordinator.Grid.SetGrid(map.Cells, map.Rows, map.Columns);
+        Cells.Clear();
+        for (int r = 0; r < map.Rows + 1; r++)
+        {
+            for (int c = 0; c < map.Columns + 1; c++)
+            {
+                Cells.Add(new CellViewModel(r, c, 0, _coordinator.Players));
+            }
+        }
+
+        RefreshGrid();
+        RefreshTurnInfo();
+        RefreshPlayers();
+    }
+
+    // Placeholder: PAVEL implement JSON save later
+    public void RequestSave()
+    {
+        // Intentionally empty for now
+    }
+
+    public void ResetGame()
+    {
+        for (int i = 0; i < _coordinator.Grid.Cells.Length; i++)
+        {
+            if (_coordinator.Grid.Cells[i] != 1) _coordinator.Grid.Cells[i] = 0;
+        }
+
+        _coordinator.TotalTurns = 0;
+        _coordinator.GameStatus = 0;
+        _coordinator.LastMoveHolder = null;
+        _coordinator.Turn = 0;
+
+        RefreshGrid();
+        RefreshTurnInfo();
+        RefreshPlayers();
     }
 
     // ─── Cell selection ───
