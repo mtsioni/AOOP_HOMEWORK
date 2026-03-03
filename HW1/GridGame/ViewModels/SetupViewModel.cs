@@ -96,7 +96,7 @@ public class SetupViewModel : ViewModelBase // Main setup view model
         // Cycle through available colors
         for (int i = 0; i < _playerCount; i++)
         {
-            string color = AvailableColors[(int)(i % AvailableColors.Count)];
+            string color = AvailableColors[i % AvailableColors.Count];
             Players.Add(new SetupPlayerViewModel(color));
         }
 
