@@ -22,6 +22,8 @@ public class GameCoordinator
         LastMoveHolder = null;
         TotalTurns = 0;
         Turn = 0;
+        for (int i = 0; i < Players.Count; i++)
+            FirstMovesLeft(i);
     }
     /*public void UpdateCanPlay(int playerIndex)
     {
@@ -53,20 +55,43 @@ public class GameCoordinator
         }
         Players[playerIndex].CanPlay = ans;
     }*/
+    public void FirstMovesLeft(int playerIndex)
+    {
+        int ans = 0;
+        for (int i = 0; i < Grid.Cells.Length; i++)
+        {
+            if (Grid.Cells[i] == 0)
+                ans++;
+        }
+        Players[playerIndex].MovesLeft = ans;
+    }
     public void UpdateMovesLeft(int playerIndex)
     {
         int ans = 0;
-        if (TotalTurns+2 == Players[playerIndex].PlayerID)
+        bool spaceAvailable = false;
+        bool firstMove = true;
+        for (int i = 0; i < Grid.Cells.Length; i++)
         {
-            for (int i = 0; i < (Grid.Rows+1)*(Grid.Columns+1); i++)
+            Console.Write($"{Grid.Cells[i]}, {Players[playerIndex].PlayerID}\n");
+            if ((Grid.Cells[i] == Players[playerIndex].PlayerID) && firstMove)
             {
-                if (Grid.Cells[i] == 0)
-                    ans++;
+                firstMove = false;
             }
+            if ((Grid.Cells[i] == 0) && !spaceAvailable)
+            {
+                spaceAvailable = true;
+            }
+            if (!firstMove && spaceAvailable)
+                break;
         }
-        else
+        if (spaceAvailable && firstMove)
         {
-            for (int i = 0; i < (Grid.Rows+1)*(Grid.Columns+1); i++)
+            FirstMovesLeft(playerIndex);
+            return;
+        }
+        else if (spaceAvailable)
+        {
+            for (int i = 0; i < Grid.Cells.Length; i++)
             {
                 if (Grid.Cells[i] == 0)
                 {
@@ -81,22 +106,16 @@ public class GameCoordinator
     {
         while (true)
         {
-            if (Players[(Turn + 1) % Players.Count].CanPlay)
-            {
-                Turn++;
+            Turn++;
+            UpdateMovesLeft(Turn);
+            if ((Players[Turn].MovesLeft > 0) || (Turn == LastMoveHolder))
                 break;
-            }
-            else
-            {
-               Turn++;
-            }
         }
     }
     public void AdvanceGame()
     {
         if (GameStatus == 0)
         {
-            UpdateMovesLeft(Turn); // updates how many moves player has left
             Players[Turn].CanPlay = (Players[Turn].MovesLeft > 0) ? true : false; // see if they can move
             if (Turn == LastMoveHolder) // if turn returned to the last move holder, check if they won or drawed
             {
@@ -133,7 +152,7 @@ public class GameCoordinator
                         }
                     }
                 }
-           }
+            }
         }
     }
 }
