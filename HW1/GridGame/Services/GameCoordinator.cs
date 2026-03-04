@@ -72,7 +72,6 @@ public class GameCoordinator
         bool firstMove = true;
         for (int i = 0; i < Grid.Cells.Length; i++)
         {
-            Console.Write($"{Grid.Cells[i]}, {Players[playerIndex].PlayerID}\n");
             if ((Grid.Cells[i] == Players[playerIndex].PlayerID) && firstMove)
             {
                 firstMove = false;

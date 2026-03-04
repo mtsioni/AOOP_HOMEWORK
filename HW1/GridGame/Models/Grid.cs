@@ -42,14 +42,17 @@ public class Grid
     public bool CheckAdjacentCells(int value, int? index) // returns true if any adjacent cell is of the desired value
     {
         bool ans = false; // return variable
-        int? targetIndex = index; // target index, check around it
+        int targetIndex = index ?? -1; // target index, check around it
         int indexModifier; // adjusts index to look at adjacent cells
+        int columnIndex = targetIndex%(Columns+1);
+        int rowIndex = (targetIndex - columnIndex)/(Rows+1);
+        int indexModified = -1;
         for (int i = 0; i < 9; i++)
         {
-            if (targetIndex == null) // check if index is null
+            if (targetIndex < 0) // check if index is null
                 break;
-            if (i == 4) // skip checking index itself
-                continue;
+            if((i == 4) || ((columnIndex == 0) && ((i%3) == 0)) || ((columnIndex == Columns) && ((i%3) == 2)) || ((rowIndex == 0) && (i < 3)) || ((rowIndex == Rows) && (i > 5)))
+                continue; // skip checking out of the bounds of the edge cases and self
             if (i < 3) // searching above - substract number of Columns
             {
                 indexModifier = (Columns+1)*-1;
@@ -67,18 +70,13 @@ public class Grid
             * 1 [3] [T] [5]
             * 2 [6] [7] [8]
             */
-            try // try - to avoid index out of bounds exception
-            {
-                if (Cells[(int)targetIndex + indexModifier + (i%3-1)] == value) // Check if cell adjacent to target holds the desired value
-                {
-                    ans = true; //set ans to true and stop checking
-                    break;
-                }
-                else continue;
-            }
-            catch (Exception) // skip whatever is wrong
-            {
+            indexModified = targetIndex + indexModifier + (i%3 - 1);
+            if ((indexModified < 0) || (indexModified > Cells.Length-1))
                 continue;
+            else if (Cells[indexModified] == value)
+            {
+                ans = true;
+                break;
             }
         }
         return ans;
@@ -86,11 +84,11 @@ public class Grid
     public bool CheckAdjacentCells(int value, int? row, int? column) // returns true if any adjacent cell is of the desired value
     {
         bool ans = false; // return variable
-        int? targetRow = row, targetColumn = column; // target row and column meaning around what cell we seatch
+        int targetRow = row ?? -1, targetColumn = column ?? -1; // target row and column meaning around what cell we seatch
         int rowModifier, columnModifier; // these will be added to a target row and column to check contents of adjacent cells
         for(int i = 0; i < 9; i++)
         {
-            if ((targetRow == null) || (targetColumn == null)) // if row or column provided is null stop search return false
+            if ((targetRow < 0) || (targetColumn < 0)) // if row or column provided is null stop search return false
                 break;
             if (i == 4) // skip the target cell itself
                 continue;
@@ -114,19 +112,12 @@ public class Grid
             * 1 [3] [T] [5]
             * 2 [6] [7] [8]
             */
-            try // try - to avoid index out of bounds exception
-            {
-                if (Cells[RowColumnToIndex((int)targetRow+rowModifier,(int)targetColumn+columnModifier)] == value) // Check if cell adjacent to target holds the desired value
-                {
-                    ans = true; //set ans to true and stop checking
-                    break;
-                }
-                else continue;
-            }
-            catch (Exception) // skip whatever is wrong
-            {
-
+            if (((targetColumn+columnModifier) < 0) || ((targetColumn+columnModifier) > Columns) || ((targetRow+rowModifier) < 0) || ((targetRow+rowModifier) > Rows))
                 continue;
+            else if (Cells[RowColumnToIndex(targetRow+rowModifier, targetColumn+columnModifier)] == value)
+            {
+                ans = true;
+                break;
             }
         }
         return ans;
