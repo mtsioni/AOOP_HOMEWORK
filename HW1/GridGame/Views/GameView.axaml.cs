@@ -43,9 +43,9 @@ public partial class GameView : UserControl
 
     private void OnPresetChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (DataContext is not GameViewModel vm) return;
-        if (vm.MapIndex < 0) return;
-
-        vm.LoadPreset();
+        if (DataContext is GameViewModel vm)
+        {
+            vm.LoadPreset();
+        }
     }
 }

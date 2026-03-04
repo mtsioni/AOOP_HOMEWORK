@@ -127,10 +127,12 @@
                 <TextBlock Text="Map Preset:"
                            VerticalAlignment="Center"
                            FontSize="12" />
+
                 <ComboBox Width="150"
-                          ItemsSource="{Binding Presets}"
-                          SelectedItem="{Binding SelectedPreset}"
-                          SelectionChanged="OnPresetChanged" />
+                          ItemsSource="{Binding Maps}"
+                          SelectedIndex="{Binding MapIndex}"
+                          SelectionChanged="OnPresetChanged"
+                          Background="#2A2A2A" />
 
                 <Button Content="Confirm Move"
                         Click="OnConfirmClicked"

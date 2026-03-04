@@ -137,10 +137,11 @@ public class GameViewModel : ViewModelBase
         RefreshPlayers();
     }
 
-    // Placeholder: PAVEL implement JSON save later
+    // Placeholder: PAVEL implement save later
     public void RequestSave()
     {
-        // Intentionally empty for now
+        // _mapHandler.Save(MapIndex);
+
     }
 
     public void ResetGame()
