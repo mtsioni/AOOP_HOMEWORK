@@ -15,19 +15,10 @@ public class GameViewModel : ViewModelBase
     public ObservableCollection<PlayerViewModel> Players { get; } // players
     
     // Dynamic presets list (PAVEL FILL THIS FROM JSON)
-    public ObservableCollection<MapDefinition> Presets { get; } = new();
+    public ObservableCollection<Map> Maps { get; } = new();
+    public int MapIndex {get; set;} // selected map's index
+    public MapHandler _mapHandler;
 
-    private MapDefinition? _selectedPreset;
-    public MapDefinition? SelectedPreset
-    {
-        get => _selectedPreset;
-        set
-        {
-            _selectedPreset = value;
-            OnPropertyChanged();
-        }
-    }
-    
     public double GridDisplayWidth => (_coordinator.Grid.Columns + 1) * 54; // 50 for the cell size + 2 for the border; we add 1 to columns because we also show the right border of the last column
 
     // ─── Turn info ───
@@ -96,15 +87,19 @@ public class GameViewModel : ViewModelBase
     private CellViewModel? _selectedCell; // the cell the current player has clicked but not confirmed yet
 
     // ─── Constructor ──────
-    public GameViewModel(MapDefinition initialMap, List<(string Name, string Color)> playerSetup)
+    public GameViewModel(List<(string Name, string Color)> playerSetup)
     {
+        _mapHandler = new MapHandler();
+        for (int i = 0; i < _mapHandler.Maps.Presets.Count; i++)
+        {
+            Maps.Add(_mapHandler.LoadMap(i));
+        }
         var playerModels = playerSetup // player id's start at 2 (0=empty, 1=wall)
             .Select((p, i) => new Player(i + 2, p.Color, p.Name))
             .ToList();
 
-        
-        var grid = new Grid(initialMap.Rows, initialMap.Columns);
-        grid.SetGrid(initialMap.Cells, initialMap.Rows, initialMap.Columns);
+        MapIndex = 0;
+        var grid = new Grid(Maps[MapIndex].Cells, Maps[MapIndex].Rows, Maps[MapIndex].Columns);
 
         _coordinator = new GameCoordinator(grid, playerModels);
         Players = new ObservableCollection<PlayerViewModel>(     // build PlayerViewModels
@@ -112,33 +107,28 @@ public class GameViewModel : ViewModelBase
         );
 
         Cells = new ObservableCollection<CellViewModel>();  // build CellViewModels; one per cell
-        for (int r = 0; r < initialMap.Rows+1; r++)
+        for (int r = 0; r < Maps[MapIndex].Rows+1; r++)
         {
-            for (int c = 0; c < initialMap.Columns+1; c++)
+            for (int c = 0; c < Maps[MapIndex].Columns+1; c++)
             {
-                Cells.Add(new CellViewModel(r, c, 0, _coordinator.Players));
+                Cells.Add(new CellViewModel(r, c, Maps[MapIndex].Cells[_coordinator.Grid.RowColumnToIndex(r, c)], _coordinator.Players));
             }
         }
-
-        // i added presets list for the dropdown (dummy for now)
-        Presets.Add(initialMap);
-        SelectedPreset = initialMap;
-
         RefreshGrid();
         RefreshTurnInfo();
         RefreshPlayers();
     }
 
     // Called when user chooses a preset (PAVEL plug JSON here later)
-    public void LoadPreset(MapDefinition map)
+    public void LoadPreset()
     {
-        _coordinator.Grid.SetGrid(map.Cells, map.Rows, map.Columns);
+        _coordinator.Grid.SetGrid(Maps[MapIndex].Cells, Maps[MapIndex].Rows, Maps[MapIndex].Columns);
         Cells.Clear();
-        for (int r = 0; r < map.Rows + 1; r++)
+        for (int r = 0; r < Maps[MapIndex].Rows + 1; r++)
         {
-            for (int c = 0; c < map.Columns + 1; c++)
+            for (int c = 0; c < Maps[MapIndex].Columns + 1; c++)
             {
-                Cells.Add(new CellViewModel(r, c, 0, _coordinator.Players));
+                Cells.Add(new CellViewModel(r, c, Maps[MapIndex].Cells[_coordinator.Grid.RowColumnToIndex(r, c)], _coordinator.Players));
             }
         }
 
@@ -155,11 +145,8 @@ public class GameViewModel : ViewModelBase
 
     public void ResetGame()
     {
-        for (int i = 0; i < _coordinator.Grid.Cells.Length; i++)
-        {
-            if (_coordinator.Grid.Cells[i] != 1) _coordinator.Grid.Cells[i] = 0;
-        }
-
+        _mapHandler.ResetMap(MapIndex);
+        _coordinator.Grid.SetGrid(Maps[MapIndex].Cells, Maps[MapIndex].Rows, Maps[MapIndex].Columns);
         _coordinator.TotalTurns = 0;
         _coordinator.GameStatus = 0;
         _coordinator.LastMoveHolder = null;

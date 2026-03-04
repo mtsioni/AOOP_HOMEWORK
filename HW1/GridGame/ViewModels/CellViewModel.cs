@@ -48,7 +48,7 @@ public class CellViewModel : ViewModelBase
             if ((Value-2) >= 0 && (Value-2) < Players.Count)
                 return Players[Value-2].PlayerColor;
 
-            return "#1A1A1A"; // fallback
+            return "#333333"; // if there is less players than were in the last save, turn their corpses into walls
         }
     }
 
