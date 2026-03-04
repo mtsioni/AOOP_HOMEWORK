@@ -92,11 +92,8 @@ public class GameCoordinator
         {
             for (int i = 0; i < Grid.Cells.Length; i++)
             {
-                if (Grid.Cells[i] == 0)
-                {
-                    if(Grid.CheckAdjacentCells(Players[playerIndex].PlayerID, i) == true)
-                        ans++;
-                }
+                if ((Grid.Cells[i] == 0) && (Grid.CheckAdjacentCells(Players[playerIndex].PlayerID, i) == true))
+                    ans ++;
             }
         }
         Players[playerIndex].MovesLeft = ans;
