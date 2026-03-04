@@ -13,4 +13,10 @@ public class Map
         Columns = columns;
     }
 
+    public string Name { get; set; } = "Map Preset 1";
+    public override string ToString()
+    {
+        return Name;
+    }
+
 }
