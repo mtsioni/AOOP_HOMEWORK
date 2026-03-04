@@ -156,6 +156,9 @@ public class GameViewModel : ViewModelBase
         RefreshGrid();
         RefreshTurnInfo();
         RefreshPlayers();
+
+        WinMessage = "";
+        CheckWinCondition();
     }
 
     // ─── Cell selection ───
