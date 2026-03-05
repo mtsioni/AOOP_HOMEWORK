@@ -9,8 +9,8 @@ namespace GridGame.ViewModels;
 public class GameViewModel : ViewModelBase
 {
     private readonly GameCoordinator _coordinator; //game engine, (thanks for calling it an engine)
-    public int Rows => _coordinator.Grid.Properties.Rows;
-    public int Columns => _coordinator.Grid.Properties.Columns;
+    public int Rows {get; set;}
+    public int Columns {get; set;}
     public ObservableCollection<CellViewModel> Cells { get; } // is like a List but the UI automatically updates when items are added or removed
     public ObservableCollection<PlayerViewModel> Players { get; } // players
     
@@ -19,7 +19,16 @@ public class GameViewModel : ViewModelBase
     public int MapIndex {get; set;} // selected map's index
     public MapHandler _mapHandler;
 
-    public double GridDisplayWidth => (_coordinator.Grid.Properties.Columns + 1) * 54; // 50 for the cell size + 2 for the border; we add 1 to columns because we also show the right border of the last column
+    private double _gridDisplayWidth;
+    public double GridDisplayWidth
+    {
+        get { return _gridDisplayWidth;}
+        set
+        {
+            _gridDisplayWidth = value;
+            OnPropertyChanged();
+        }
+    } 
 
     // ─── Turn info ───
     private int _turnNumber;
@@ -102,6 +111,10 @@ public class GameViewModel : ViewModelBase
         var grid = new Grid(Maps[MapIndex]);
 
         _coordinator = new GameCoordinator(grid, playerModels);
+        Rows = _coordinator.Grid.Properties.Rows;
+        Columns = _coordinator.Grid.Properties.Columns;
+        GridDisplayWidth = 54 * (_coordinator.Grid.Properties.Columns + 1);
+
         Players = new ObservableCollection<PlayerViewModel>(     // build PlayerViewModels
             playerModels.Select(p => new PlayerViewModel(p))
         );
@@ -131,7 +144,15 @@ public class GameViewModel : ViewModelBase
                 Cells.Add(new CellViewModel(r, c, Maps[MapIndex].Cells[_coordinator.Grid.RowColumnToIndex(r, c)], _coordinator.Players));
             }
         }
-
+        Rows = _coordinator.Grid.Properties.Rows;
+        Columns = _coordinator.Grid.Properties.Columns;
+        GridDisplayWidth = 54 * (_coordinator.Grid.Properties.Columns + 1);
+        
+        _coordinator.TotalTurns = 0;
+        _coordinator.GameStatus = 0;
+        _coordinator.LastMoveHolder = null;
+        _coordinator.Turn = 0;
+        
         RefreshGrid();
         RefreshTurnInfo();
         RefreshPlayers();
