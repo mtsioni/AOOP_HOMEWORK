@@ -2,30 +2,34 @@ using System.Text.Json;
 using System.IO;
 using GridGame.Models;
 namespace GridGame.Services;
-
 public class Data
 {
-    public List<Map> Presets { get; set; }
-    public List<Map> Saves { get; set; }
+    public List<Map> Presets {get; set;}
+    public List<Map> Saves {get; set;}
 }
 public class MapHandler
 {
-    public Data Maps { get; set; }
+    public Data MapData {get; set;}
     public MapHandler()
     {
-        Maps = new Data();
+        MapData = new Data();
         string path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "Maps.json");
         string json = System.IO.File.ReadAllText(path);
-        Maps = JsonSerializer.Deserialize<Data>(json);
+        MapData = JsonSerializer.Deserialize<Data>(json);
     }
     public Map LoadMap(int index)
     {
-        var map = Maps.Saves[index];
-        map.Name = $"Map Preset {index + 1}";
-        return map;
+        return MapData.Saves[index];
     }
     public void ResetMap(int index)
     {
-        Maps.Saves[index] = Maps.Presets[index];
+        MapData.Saves[index] = MapData.Presets[index];
+        Save();
+    }
+    public void Save()
+    {
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "Maps.json");
+        string json = JsonSerializer.Serialize(MapData);
+        System.IO.File.WriteAllText(path, json);
     }
 }

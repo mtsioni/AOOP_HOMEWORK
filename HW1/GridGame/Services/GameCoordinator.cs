@@ -58,9 +58,9 @@ public class GameCoordinator
     public void FirstMovesLeft(int playerIndex)
     {
         int ans = 0;
-        for (int i = 0; i < Grid.Cells.Length; i++)
+        for (int i = 0; i < Grid.Properties.Cells.Length; i++)
         {
-            if (Grid.Cells[i] == 0)
+            if (Grid.Properties.Cells[i] == 0)
                 ans++;
         }
         Players[playerIndex].MovesLeft = ans;
@@ -70,13 +70,13 @@ public class GameCoordinator
         int ans = 0;
         bool spaceAvailable = false;
         bool firstMove = true;
-        for (int i = 0; i < Grid.Cells.Length; i++)
+        for (int i = 0; i < Grid.Properties.Cells.Length; i++)
         {
-            if ((Grid.Cells[i] == Players[playerIndex].PlayerID) && firstMove)
+            if ((Grid.Properties.Cells[i] == Players[playerIndex].PlayerID) && firstMove)
             {
                 firstMove = false;
             }
-            if ((Grid.Cells[i] == 0) && !spaceAvailable)
+            if ((Grid.Properties.Cells[i] == 0) && !spaceAvailable)
             {
                 spaceAvailable = true;
             }
@@ -90,9 +90,9 @@ public class GameCoordinator
         }
         else if (spaceAvailable)
         {
-            for (int i = 0; i < Grid.Cells.Length; i++)
+            for (int i = 0; i < Grid.Properties.Cells.Length; i++)
             {
-                if ((Grid.Cells[i] == 0) && (Grid.CheckAdjacentCells(Players[playerIndex].PlayerID, i) == true))
+                if ((Grid.Properties.Cells[i] == 0) && (Grid.CheckAdjacentCells(Players[playerIndex].PlayerID, i) == true))
                     ans ++;
             }
         }
@@ -129,9 +129,9 @@ public class GameCoordinator
                 {
                     if (TotalTurns+2 == Players[Turn].PlayerID) // first move
                     {
-                        if (Grid.Cells[PlayersChoice] == 0) // check if selected spot is empty
+                        if (Grid.Properties.Cells[PlayersChoice] == 0) // check if selected spot is empty
                         {
-                            Grid.Cells[PlayersChoice] = Players[Turn].PlayerID; // set spot to be player's
+                            Grid.Properties.Cells[PlayersChoice] = Players[Turn].PlayerID; // set spot to be player's
                             LastMoveHolder = Turn; // adjust LastMoveHolder
                             TotalTurns++; // increase turn counter
                             PassOnTheTurn(); // pass on the turn
@@ -139,9 +139,9 @@ public class GameCoordinator
                     }
                     else // any other move
                     {
-                        if ((Grid.Cells[PlayersChoice] == 0) && (Grid.CheckAdjacentCells(Players[Turn].PlayerID, PlayersChoice) == true)) // check if the spot is empty and adjacent to any of the player's cells
+                        if ((Grid.Properties.Cells[PlayersChoice] == 0) && (Grid.CheckAdjacentCells(Players[Turn].PlayerID, PlayersChoice) == true)) // check if the spot is empty and adjacent to any of the player's cells
                         {
-                            Grid.Cells[PlayersChoice] = Players[Turn].PlayerID; // set spot to be player's
+                            Grid.Properties.Cells[PlayersChoice] = Players[Turn].PlayerID; // set spot to be player's
                             LastMoveHolder = Turn; // adjust LastMoveHolder
                             TotalTurns++; // increase turn counter
                             PassOnTheTurn(); // pass on the turn

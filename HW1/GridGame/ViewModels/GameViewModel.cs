@@ -9,8 +9,8 @@ namespace GridGame.ViewModels;
 public class GameViewModel : ViewModelBase
 {
     private readonly GameCoordinator _coordinator; //game engine, (thanks for calling it an engine)
-    public int Rows => _coordinator.Grid.Rows;
-    public int Columns => _coordinator.Grid.Columns;
+    public int Rows => _coordinator.Grid.Properties.Rows;
+    public int Columns => _coordinator.Grid.Properties.Columns;
     public ObservableCollection<CellViewModel> Cells { get; } // is like a List but the UI automatically updates when items are added or removed
     public ObservableCollection<PlayerViewModel> Players { get; } // players
     
@@ -19,7 +19,7 @@ public class GameViewModel : ViewModelBase
     public int MapIndex {get; set;} // selected map's index
     public MapHandler _mapHandler;
 
-    public double GridDisplayWidth => (_coordinator.Grid.Columns + 1) * 54; // 50 for the cell size + 2 for the border; we add 1 to columns because we also show the right border of the last column
+    public double GridDisplayWidth => (_coordinator.Grid.Properties.Columns + 1) * 54; // 50 for the cell size + 2 for the border; we add 1 to columns because we also show the right border of the last column
 
     // ─── Turn info ───
     private int _turnNumber;
@@ -90,7 +90,7 @@ public class GameViewModel : ViewModelBase
     public GameViewModel(List<(string Name, string Color)> playerSetup)
     {
         _mapHandler = new MapHandler();
-        for (int i = 0; i < _mapHandler.Maps.Presets.Count; i++)
+        for (int i = 0; i < _mapHandler.MapData.Saves.Count; i++)
         {
             Maps.Add(_mapHandler.LoadMap(i));
         }
@@ -99,7 +99,7 @@ public class GameViewModel : ViewModelBase
             .ToList();
 
         MapIndex = 0;
-        var grid = new Grid(Maps[MapIndex].Cells, Maps[MapIndex].Rows, Maps[MapIndex].Columns);
+        var grid = new Grid(Maps[MapIndex]);
 
         _coordinator = new GameCoordinator(grid, playerModels);
         Players = new ObservableCollection<PlayerViewModel>(     // build PlayerViewModels
@@ -122,7 +122,7 @@ public class GameViewModel : ViewModelBase
     // Called when user chooses a preset (PAVEL plug JSON here later)
     public void LoadPreset()
     {
-        _coordinator.Grid.SetGrid(Maps[MapIndex].Cells, Maps[MapIndex].Rows, Maps[MapIndex].Columns);
+        _coordinator.Grid.SetGrid(Maps[MapIndex]);
         Cells.Clear();
         for (int r = 0; r < Maps[MapIndex].Rows + 1; r++)
         {
@@ -140,14 +140,18 @@ public class GameViewModel : ViewModelBase
     // Placeholder: PAVEL implement save later
     public void RequestSave()
     {
-        // _mapHandler.Save(MapIndex);
-
+        _mapHandler.Save();
     }
 
     public void ResetGame()
     {
+        int mapIndexTemp = MapIndex;
         _mapHandler.ResetMap(MapIndex);
-        _coordinator.Grid.SetGrid(Maps[MapIndex].Cells, Maps[MapIndex].Rows, Maps[MapIndex].Columns);
+        Map map = _mapHandler.MapData.Saves[MapIndex];
+        map.Name = Maps[MapIndex].Name;
+        Maps[MapIndex] = map;
+        MapIndex = mapIndexTemp;
+        _coordinator.Grid.SetGrid(Maps[MapIndex]);
         _coordinator.TotalTurns = 0;
         _coordinator.GameStatus = 0;
         _coordinator.LastMoveHolder = null;
@@ -200,7 +204,7 @@ public class GameViewModel : ViewModelBase
     {
         for (int i = 0; i < Cells.Count; i++)
         {
-            Cells[i].Value = _coordinator.Grid.Cells[i];
+            Cells[i].Value = _coordinator.Grid.Properties.Cells[i];
         }
     }
 
